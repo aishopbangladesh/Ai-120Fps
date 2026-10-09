@@ -1,0 +1,6 @@
+{
+  "name": "Ai 120Fps",
+  "description": "Esports 120FPS game turbo booster, GFX configurator, ADB refresh rate tool and sensitivity aim lab.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with display name, email, and preferences",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User unique identifier matching auth UID"
+        },
+        "email": {
+          "type": "string",
+          "description": "User Google email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name"
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "User profile avatar URL"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Profile creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Profile last update timestamp"
+        }
+      },
+      "required": ["userId", "email"]
+    },
+    "GameTurboProfile": {
+      "title": "GameTurboProfile",
+      "description": "Synced Game Turbo tuning profile and RAM optimizer preferences",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "turboActive": {
+          "type": "boolean",
+          "description": "Whether Game Turbo 120 FPS mode is active"
+        },
+        "forcePeakRefreshRate": {
+          "type": "boolean",
+          "description": "Force 120Hz display refresh rate"
+        },
+        "gameFocusPriority": {
+          "type": "boolean",
+          "description": "Disable notifications and distractions during gameplay"
+        },
+        "backgroundSyncThrottling": {
+          "type": "boolean",
+          "description": "Throttle background network sync to lower game latency"
+        },
+        "autoRamCleanOnLaunch": {
+          "type": "boolean",
+          "description": "Auto kill background processes when launching game"
+        },
+        "lastRamCleanMb": {
+          "type": "number",
+          "description": "Amount of RAM freed in MB during last optimization"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last profile update timestamp"
+        }
+      },
+      "required": ["userId", "turboActive"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles indexed by UID"
+    },
+    "/users/{userId}/turboProfiles/{profileId}": {
+      "schema": "GameTurboProfile",
+      "description": "Game Turbo custom configurations and RAM optimization settings per user"
+    }
+  }
+}

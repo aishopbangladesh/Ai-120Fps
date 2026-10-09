@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId == request.auth.uid &&
+             data.email is string &&
+             data.email.size() > 0 &&
+             data.email.size() <= 256;
+    }
+
+    function isValidTurboProfile(data) {
+      return data.userId == request.auth.uid &&
+             data.turboActive is bool &&
+             (!('forcePeakRefreshRate' in data) || data.forcePeakRefreshRate is bool) &&
+             (!('gameFocusPriority' in data) || data.gameFocusPriority is bool) &&
+             (!('backgroundSyncThrottling' in data) || data.backgroundSyncThrottling is bool) &&
+             (!('autoRamCleanOnLaunch' in data) || data.autoRamCleanOnLaunch is bool);
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUserProfile(request.resource.data);
+      allow update: if isOwner(userId) && isValidUserProfile(request.resource.data);
+      allow delete: if false;
+
+      match /turboProfiles/{profileId} {
+        allow read: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidTurboProfile(request.resource.data);
+        allow update: if isOwner(userId) && isValidTurboProfile(request.resource.data);
+        allow delete: if isOwner(userId);
+      }
+    }
+  }
+}
